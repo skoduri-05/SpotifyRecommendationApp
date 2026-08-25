@@ -1,0 +1,58 @@
+# .gitignore for SpotifyApiClient (.NET 10 ASP.NET Core project)
+
+# Build artifacts
+bin/
+obj/
+
+# Publish folder
+publish/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.dotsettings
+
+# NuGet
+*.nupkg
+packages/
+
+# ReSharper caches
+_ReSharper*/
+*.DotSettings.user
+
+# ASP.NET temporary files
+wwwroot/node_modules/
+
+# Logs
+*.log
+logs/
+
+# .NET cache and tooling
+.vs/
+*.dotnet/
+project.lock.json
+project.fragment.lock.json
+
+# Ignore all appsettings configuration files (to avoid committing secrets)
+appsettings*.json
+
+# Ignore user secrets file used by dotnet user-secrets
+secrets.json
+
+# Runtime files
+*.pid
+*.seed
+
+# Generated files
+*.g.cs
+
+# Coverage and test results
+coverage*/
+TestResults/
+
+# Docker-related
+docker-compose.override.yml
+
+# Ensure Git doesn't ignore this file
+!.gitignore
