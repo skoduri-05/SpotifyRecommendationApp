@@ -1,6 +1,12 @@
-﻿namespace SpotifyApiClient.Services
+﻿using SpotifyApiClient.Interfaces;
+
+namespace SpotifyApiClient.Services
 {
-    public class SpotifyApiService
+    public class SpotifyApiService : ISpotifyApiService
     {
+        public SpotifyApiService()
+        {
+
+        }
     }
 }
