@@ -18,7 +18,11 @@ namespace SpotifyApiClient.Controllers
         [HttpGet]
         public ActionResult DoSomething()
         {
+            _logger.LogInformation("Starting {Method}", nameof(DoSomething));
+
             _logger.LogInformation("Doing sum");
+
+            _logger.LogInformation("Finished {Method} returning {Status}", nameof(DoSomething), 200);
             return new OkObjectResult(200);
         }
 

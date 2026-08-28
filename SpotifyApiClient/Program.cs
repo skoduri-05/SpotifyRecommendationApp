@@ -10,11 +10,24 @@ builder.Logging.AddConsole();
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddHttpClient("SpotifyApi", (HttpClient) =>
+// Allowed origins for CORS are read from configuration (appsettings). Falls back to localhost if not present.
+var allowedOrigins = _config.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? new[] { "https://localhost:7032" };
+builder.Services.AddCors(options =>
 {
-    var spotifyApiConfig = _config.GetSection("Spotify");
-
+    options.AddPolicy("LocalhostPolicy", policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+// Configure a named HttpClient for Spotify API calls. Authorization header will be set at startup.
+builder.Services.AddHttpClient("SpotifyApi", client =>
+{
+    client.BaseAddress = new Uri("https://api.spotify.com/");
+    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("SpotifyApiClient/1.0");
 });
 builder.Services.AddScoped<ISpotifyApiService, SpotifyApiService>();
 builder.Services.AddScoped<ISpotifyAuthService, SpotifyAuthService>();
@@ -38,8 +51,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("LocalhostPolicy");
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Initialize Spotify auth (obtain an access token and set client header) before handling requests.
+using (var scope = app.Services.CreateScope())
+{
+    var auth = scope.ServiceProvider.GetRequiredService<ISpotifyAuthService>();
+    await auth.InitializeAsync();
+}
 
 app.Run();
