@@ -17,6 +17,9 @@ namespace SpotifyApiClient.Controllers
             _authService = authService;
         }
 
+
+
+        
         [HttpGet("/login")]
         public IActionResult Login()
         {
@@ -39,7 +42,7 @@ namespace SpotifyApiClient.Controllers
         }
 
         [HttpGet("/callback")]
-        public async Task<IActionResult> Callback([FromQuery] string code, [FromQuery] string state, [FromQuery] string error)
+        public async Task<IActionResult> Callback([FromQuery] string? code = null, [FromQuery] string? state = null, [FromQuery] string? error = null)
         {
             _logger.LogInformation("Starting {Method}", nameof(Callback));
 
@@ -88,9 +91,10 @@ namespace SpotifyApiClient.Controllers
                 });
             }
 
-            // Redirect to frontend app or return token info. Here we redirect to root.
-            _logger.LogInformation("Finished {Method} returning redirect to root. Token present: {HasAccessToken}, Refresh present: {HasRefresh}", nameof(Callback), !string.IsNullOrEmpty(token.AccessToken), !string.IsNullOrEmpty(token.RefreshToken));
-            return Redirect("/");
+            // Return a simple confirmation page for local testing instead of redirecting.
+            _logger.LogInformation("Finished {Method} returning confirmation page. Token present: {HasAccessToken}, Refresh present: {HasRefresh}", nameof(Callback), !string.IsNullOrEmpty(token.AccessToken), !string.IsNullOrEmpty(token.RefreshToken));
+            var html = "<html><body><h1>Auth successful</h1><p>You may close this window and return to the application.</p></body></html>";
+            return Content(html, "text/html");
         }
     }
 }

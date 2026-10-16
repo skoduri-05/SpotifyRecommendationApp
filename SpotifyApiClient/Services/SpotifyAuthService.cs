@@ -32,6 +32,7 @@ namespace SpotifyApiClient.Services
             var redirectUri = _config["Spotify:RedirectUri"] ?? string.Empty;
             var scope = _config["Spotify:Scope"] ?? "user-read-private user-read-email";
 
+
             var state = GenerateRandomString(16);
 
             var query = new StringBuilder();
